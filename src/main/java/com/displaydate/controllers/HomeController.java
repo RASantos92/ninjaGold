@@ -1,4 +1,4 @@
-package com.homecontroller;
+package com.displaydate.controllers;
 
 import java.util.Random;
 
@@ -20,7 +20,6 @@ public class HomeController {
 		if (player == null) {
 			session.setAttribute("player", new Player());
 		}
-
 		return "index.jsp";
 	}
 
@@ -28,9 +27,9 @@ public class HomeController {
 	public String farm(HttpSession session) {
 		Random rand = new Random();
 		Player player = (Player) session.getAttribute("player");
-		Integer income = (rand.nextInt(11));
+		Integer income = (rand.nextInt(30));
 		player.gold += income;
-		player.addToTasks("Your farmed up " + income + " gold");
+		player.addToTasks("Your farmed up " + income + "$");
 		return "redirect:/";
 	}
 
@@ -38,28 +37,33 @@ public class HomeController {
 	public String casino(HttpSession session) {
 		Random rand = new Random();
 		Player player = (Player) session.getAttribute("player");
-		player.gold += -10;
-		Integer income = (rand.nextInt(-10) + 10);
-		player.gold += income;
-		if (income > 10) {
-			player.addToTasks("Congratulations you won " + (income - 10) + "$");
+		Integer income = (rand.nextInt(20) - 9);
+		if (player.gold <= 0) {
+			player.addToTasks("Sorry but you need to have money to gamble.");
 		} else {
-			player.addToTasks("Im sorry but you hav lost " + (income - 10) + "$");
+			if (income > 0) {
+				player.addToTasks("Congratulations you won " + (income) + "$");
+				player.gold += income;
+			} else {
+				player.addToTasks("Im sorry but you have lost " + (income) + "$");
+				player.gold += income;
+			}
 		}
+
 		return "redirect:/";
 	}
 
-	@PostMapping("/action/home")
+	@PostMapping("/action/house")
 	public String home(HttpSession session) {
 		Random rand = new Random();
 		Player player = (Player) session.getAttribute("player");
-		Integer income = (rand.nextInt(5));
+		Integer income = (rand.nextInt(10));
 		player.gold += income;
-		player.addToTasks("You found " + income + " in your couch!");
+		player.addToTasks("You found " + income + "$ in your couch!");
 		return "redirect:/";
 	}
 
-	@PostMapping("/action/program")
+	@PostMapping("/action/programming")
 	public String program(HttpSession session) {
 		Random rand = new Random();
 		Player player = (Player) session.getAttribute("player");
